@@ -22,13 +22,20 @@ body {
 
 
     }
+    
+
 
   </style>
 </head>
 <body>
 
   <canvas id="mycanvas" width="600" height="700"></canvas>
+  <audio id="MusicaDeFondo" loop>
+<source src="HimnoDeLaWCL.mp3" type="Audio/mp3">
+  
+</audio>
 
+  
 <script>
 
 /// NOMBRE:FLORES SANCHEZ JOSE RAMON
@@ -109,9 +116,6 @@ body {
         ctx.strokeRect(400, 610,15,90);
 
 
-
-
-
         ctx.beginPath();
         ctx.fillStyle = "white";
         ctx.fillRect(370, 330, 230, 10);
@@ -128,13 +132,21 @@ body {
         ctx.lineWidth = 5;
         ctx.stroke();
 
-    
+        ////MUSICA DE FONDO AL HACER CLICK EN LA PANTALLA
 
+        document.body.addEventListener('click', () => {
 
+      const MusicaDeFondo = document.getElementById('MusicaDeFondo');
 
+      MusicaDeFondo.play().catch(error => {
 
+        console.error('Error al reproducir el audio:', error);
 
+      });
 
+    });
+
+  
 
 
 
