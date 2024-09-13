@@ -5,152 +5,122 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>MemoramaDeFutbol</title>
   <style>
-
-
-
-body {
+    body {
       background-color: rgb(0, 0, 0);
+      color: white;
+      text-align: center;
     }
-
-    
     canvas {
       background-color: rgb(7, 216, 0);
-      border:5px solid rgb(255, 252, 252);
+      border: 5px solid rgb(255, 252, 252);
       display: block;
       margin: 0 auto;
-
-
-
     }
-    
-
-
+    #timer {
+      font-size: 30px;
+      margin-bottom: 20px;
+    }
   </style>
 </head>
 <body>
-
+  <div id="timer">Tiempo: 0s</div>
   <canvas id="mycanvas" width="600" height="700"></canvas>
   <audio id="MusicaDeFondo" loop>
-<source src="HimnoDeLaWCL.mp3" type="Audio/mp3">
-  
-</audio>
-
-  
-<script>
-
-/// NOMBRE:FLORES SANCHEZ JOSE RAMON
-/// PROGRAMACION AVANAZADA EN INTERNET
-/// CARRERA : INGENERIA EN DESARROLLO DE SOFTWARE
-//// TURNO : VESPERTNO
-//// EXAMEN U2 : MEMORAMA
-
-
- const mycanvas = document.getElementById("mycanvas");
+    <source src="HimnoDeLaWCL.mp3" type="audio/mp3">
+  </audio>
+  <script>
+    const mycanvas = document.getElementById("mycanvas");
     const ctx = mycanvas.getContext("2d");
 
-
     /////DISEÑO DEL MEMORAMA CAMPO DE FUTBOL
-        
-        ctx.beginPath();
-        ctx.fillStyle = "white";
-        ctx.fillRect(0, 330, 230, 10);
+    function drawCampo(){
+      ctx.clearRect(0, 0, mycanvas.width, mycanvas.height); 
+      ctx.beginPath();
+      ctx.fillStyle = "white";
+      ctx.fillRect(0, 330, 230, 10);
+      ctx.strokeStyle = "#000000";
+      ctx.lineWidth = 5;
+      ctx.strokeRect(0, 330, 230, 10);
 
-        ctx.strokeStyle = "#00000";
-        ctx.lineWidth = 5;
-        ctx.strokeRect(0, 330,230, 10);
+      ctx.beginPath();
+      ctx.fillStyle = "white";
+      ctx.fillRect(180, 70, 230, 10);
+      ctx.strokeStyle = "#000000";
+      ctx.lineWidth = 5;
+      ctx.strokeRect(180, 70, 230, 10);
 
+      ctx.beginPath();
+      ctx.fillStyle = "white";
+      ctx.fillRect(170, 0, 15, 80);
+      ctx.strokeStyle = "#000000";
+      ctx.lineWidth = 5;
+      ctx.strokeRect(170, 0, 15, 80);
 
-        ctx.beginPath();
-        ctx.fillStyle = "white";
-        ctx.fillRect(180, 70, 230, 10);
+      ctx.beginPath();
+      ctx.fillStyle = "white";
+      ctx.fillRect(395, 0, 15, 80);
+      ctx.strokeStyle = "#000000";
+      ctx.lineWidth = 5;
+      ctx.strokeRect(395, 0, 15, 80);
 
-        ctx.strokeStyle = "#00000";
-        ctx.lineWidth = 5;
-        ctx.strokeRect(180, 70,230, 10);
+      ctx.beginPath();
+      ctx.fillStyle = "white";
+      ctx.fillRect(180, 610, 230, 10);
+      ctx.strokeStyle = "#000000";
+      ctx.lineWidth = 5;
+      ctx.strokeRect(180, 610, 230, 10);
 
+      ctx.beginPath();
+      ctx.fillStyle = "white";
+      ctx.fillRect(170, 610, 15, 90);
+      ctx.strokeStyle = "#000000";
+      ctx.lineWidth = 5;
+      ctx.strokeRect(170, 610, 15, 90);
 
-        
-        ctx.beginPath();
-        ctx.fillStyle = "white";
-        ctx.fillRect(170, 0, 15, 80);
+      ctx.beginPath();
+      ctx.fillStyle = "white";
+      ctx.fillRect(400, 610, 15, 90);
+      ctx.strokeStyle = "#000000";
+      ctx.lineWidth = 5;
+      ctx.strokeRect(400, 610, 15, 90);
 
-        ctx.strokeStyle = "#00000";
-        ctx.lineWidth = 5;
-        ctx.strokeRect(170, 0,15,80);
+      ctx.beginPath();
+      ctx.fillStyle = "white";
+      ctx.fillRect(370, 330, 230, 10);
+      ctx.strokeStyle = "#000000";
+      ctx.lineWidth = 5;
+      ctx.strokeRect(370, 330, 230, 10);
 
+      ////Circulo del Campo
+      ctx.beginPath();
+      ctx.arc(300, 330, 70, 0, 2 * Math.PI);
+      ctx.strokeStyle = "#ffffff";
+      ctx.lineWidth = 5;
+      ctx.stroke();
+    }
 
-        ctx.beginPath();
-        ctx.fillStyle = "white";
-        ctx.fillRect(395, 0, 15, 80);
-
-        ctx.strokeStyle = "#00000";
-        ctx.lineWidth = 5;
-        ctx.strokeRect(395, 0,15,80);
-
-
-
-         ctx.beginPath();
-        ctx.fillStyle = "white";
-        ctx.fillRect(180, 610, 230, 10);
-
-        ctx.strokeStyle = "#00000";
-        ctx.lineWidth = 5;
-        ctx.strokeRect(180, 610,230, 10);
-
-
-        ctx.beginPath();
-        ctx.fillStyle = "white";
-        ctx.fillRect(170, 610, 15, 90);
-
-        ctx.strokeStyle = "#00000";
-        ctx.lineWidth = 5;
-        ctx.strokeRect(170, 610,15,90);
-
-        
-        ctx.beginPath();
-        ctx.fillStyle = "white";
-        ctx.fillRect(400, 610, 15, 90);
-
-        ctx.strokeStyle = "#00000";
-        ctx.lineWidth = 5;
-        ctx.strokeRect(400, 610,15,90);
-
-
-        ctx.beginPath();
-        ctx.fillStyle = "white";
-        ctx.fillRect(370, 330, 230, 10);
-
-        ctx.strokeStyle = "#00000";
-        ctx.lineWidth = 5;
-        ctx.strokeRect(370, 330,230, 10);
-
-        ////Circulo del Campo
-
-        ctx.beginPath();
-        ctx.arc(300, 330, 70, 0, 2 * Math.PI);
-        ctx.strokeStyle = "#ffffff";
-        ctx.lineWidth = 5;
-        ctx.stroke();
-
-        ////MUSICA DE FONDO AL HACER CLICK EN LA PANTALLA
-
-        document.body.addEventListener('click', () => {
-
+    ////MUSICA DE FONDO AL HACER CLICK EN LA PANTALLA
+    document.body.addEventListener('click', () => {
       const MusicaDeFondo = document.getElementById('MusicaDeFondo');
-
       MusicaDeFondo.play().catch(error => {
-
         console.error('Error al reproducir el audio:', error);
-
       });
-
     });
 
-  
+    //// CONTADOR DE TIEMPO DESDE LA CARGA DEL JUEGO
+    let Temporizador = Date.now();
+    function Tiempo() {
+      let currentTime = Date.now();
+      let elapsedTime = Math.floor((currentTime - Temporizador) / 1000); 
+      document.getElementById("timer").innerText = "Tiempo: " + elapsedTime + "s";
+      requestAnimationFrame(Tiempo);
+    }
 
-
-
-
-</script>
+    
+    window.onload = function() {
+      Tiempo();
+      drawCampo();
+    };
+  </script>
 </body>
 </html>
