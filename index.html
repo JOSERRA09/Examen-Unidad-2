@@ -1,4 +1,4 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -20,14 +20,31 @@
       font-size: 30px;
       margin-bottom: 20px;
     }
+    #startButton {
+      margin-top: 20px;
+      padding: 10px 20px;
+      font-size: 20px;
+      cursor: pointer;
+      background-color: #06a700;
+      color: rgb(0, 0, 0);
+      border: none;
+      border-radius: 5px;
+    }
   </style>
 </head>
 <body>
   <div id="timer">Tiempo: 0s</div>
+
   <canvas id="mycanvas" width="600" height="700"></canvas>
+
   <audio id="MusicaDeFondo" loop>
     <source src="HimnoDeLaWCL.mp3" type="audio/mp3">
   </audio>
+
+  <audio id="Sonido">
+    <source src="Balon.mp3" type="audio/mp3">
+  </audio>
+
   <button id="startButton">Iniciar Juego</button>
 
   <script>
@@ -36,75 +53,77 @@
     const MusicaDeFondo = document.getElementById("MusicaDeFondo");
     const timerDiv = document.getElementById("timer");
     const startButton = document.getElementById("startButton");
+    const Sonido = document.getElementById("Sonido");
 
-
-
-    var Cartas = [];
-    var voltearCarta = [];
-    var Pares = 0;
-    var nivel = 1;
-    var totalPares = 15;
-    var movimiento = 0;
-    var InicioTiempo;
-    var IniciarJuego = false;
-
-
-    ////CARGAR LAS IMAGENES DE LAS CARTAS
+    let Cartas = [];
+    let voltearCarta = [];
+    let Pares = 0;
+    let nivel = 1;
+    let totalPares = 15;
+    let InicioTiempo;
+    let IniciarJuego = false;
     const cartasimg = [];
+    const cartaImages = [];
+
     for (let i = 0; i < totalPares; i++) {
       cartasimg.push("Neymar.png");
     }
-    ///DUPLICAR LAS CARTAS SI ES PAR
     let cartasdeljuego = [...cartasimg, ...cartasimg];
 
-
-    ////BARAJEAR LAS CARTAS
     function Barajear(array) {
       for (let i = array.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [array[i], array[j]] = [array[j], array[i]];
       }
     }
-    ///ICARTAS
+
     function Icartas() {
       Cartas = [];
+      cartaImages.length = 0; // Limpiar el array de imágenes
       for (let i = 0; i < cartasdeljuego.length; i++) {
         Cartas.push({ voltear: false, matched: false });
+        const img = new Image();
+        img.src = cartasdeljuego[i];
+        cartaImages[i] = img;
       }
-      drawcartas(); 
+      drawcartas();
     }
-    ///DIBUJA LAS CARTAS DENTRO DEL CAMPO DE FUTBOL
 
     function drawcartas() {
-
       ctx.clearRect(0, 0, mycanvas.width, mycanvas.height);
-
-        ///DIBUJA EL DISEÑO DE CAMPO DE FUTBOL ,MAS LAS CARTAS
-        drawCampo();
-
+      drawCampo();
 
       for (let i = 0; i < cartasdeljuego.length; i++) {
         const x = (i % 5) * 120;
         const y = Math.floor(i / 5) * 120;
-        ctx.fillStyle = "#000000";
+        ctx.fillStyle = "#ffffff";
         ctx.fillRect(x, y, 100, 100);
 
-        
-        
         if (Cartas[i].voltear || Cartas[i].matched) {
-          const img = new Image();
-          img.src = cartasdeljuego[i];
-          img.onload = function() {
-            ctx.drawImage(img, x, y, 100, 100);
-          };
+          ctx.drawImage(cartaImages[i], x, y, 100, 100);
         } else {
-          ctx.fillStyle = "#333";
+          ctx.fillStyle = "#000000";
           ctx.fillRect(x + 5, y + 5, 90, 90);
         }
       }
     }
 
-    /////DISEÑO DEL CAMPO DE FUTBOL
+  mycanvas.addEventListener("click", (e) => {
+      if (!IniciarJuego) return; 
+      const x = e.offsetX;
+      const y = e.offsetY;
+      const index = Math.floor(x / 120) + Math.floor(y / 120) * 5;
+
+      if (!Cartas[index].voltear && voltearCarta.length < 2) {
+        Cartas[index].flipped = true;
+        voltearCarta.push({index: index});
+        Sonido.play(); 
+        drawcartas();
+        // checkForMatch();
+      }
+    });
+
+
     function drawCampo() {
       ctx.beginPath();
       ctx.fillStyle = "white";
@@ -162,7 +181,6 @@
       ctx.lineWidth = 5;
       ctx.strokeRect(370, 330, 230, 10);
 
-      // Circulo del Campo
       ctx.beginPath();
       ctx.arc(300, 330, 70, 0, 2 * Math.PI);
       ctx.strokeStyle = "#ffffff";
@@ -170,7 +188,6 @@
       ctx.stroke();
     }
 
-    ////EL TIEMPO DEL JUEGO
     function Tiempo() {
       const currentTime = Date.now();
       const elapsedTime = Math.floor((currentTime - InicioTiempo) / 1000);
@@ -178,12 +195,9 @@
       requestAnimationFrame(Tiempo);
     }
 
-    
-    ///BOTON DE INICIAR JUEGO ,REPRODUCE LA MUSICA DE FONDO ,EL TIEMPO DEL JUEGO ,APARECEN LAS CARTAS
-
     startButton.addEventListener("click", () => {
       MusicaDeFondo.play();
-      startButton.style.display = "none"; 
+      startButton.style.display = "none";
       IniciarJuego = true;
       Barajear(cartasdeljuego);
       Icartas();
@@ -191,7 +205,7 @@
       Tiempo();
     });
 
-     drawCampo();
+    drawCampo();
   </script>
 </body>
 </html>
