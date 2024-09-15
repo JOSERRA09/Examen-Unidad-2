@@ -55,20 +55,21 @@
     const startButton = document.getElementById("startButton");
     const Sonido = document.getElementById("Sonido");
 
-    let Cartas = [];
-    let voltearCarta = [];
-    let Pares = 0;
-    let nivel = 1;
-    let totalPares = 15;
-    let InicioTiempo;
-    let IniciarJuego = false;
-    const cartasimg = [];
-    const cartaImages = [];
+    var Cartas = [];
+    var voltearCarta = [];
+    var Pares = 0;
+    var nivel = 1;
+    var totalPares = 15;
+    var InicioTiempo;
+    var IniciarJuego = false;
+    var moves = 0;
 
+
+    const cartaImages = [];
     for (let i = 0; i < totalPares; i++) {
-      cartasimg.push("Neymar.png");
+      cartaImages.push(`Neymar.png`);
     }
-    let cartasdeljuego = [...cartasimg, ...cartasimg];
+    let cartasdeljuego = [...cartaImages, ...cartaImages];
 
     function Barajear(array) {
       for (let i = array.length - 1; i > 0; i--) {
@@ -79,18 +80,15 @@
 
     function Icartas() {
       Cartas = [];
-      cartaImages.length = 0; // Limpiar el array de imágenes
       for (let i = 0; i < cartasdeljuego.length; i++) {
         Cartas.push({ voltear: false, matched: false });
-        const img = new Image();
-        img.src = cartasdeljuego[i];
-        cartaImages[i] = img;
       }
       drawcartas();
     }
 
     function drawcartas() {
       ctx.clearRect(0, 0, mycanvas.width, mycanvas.height);
+    
       drawCampo();
 
       for (let i = 0; i < cartasdeljuego.length; i++) {
@@ -100,8 +98,17 @@
         ctx.fillRect(x, y, 100, 100);
 
         if (Cartas[i].voltear || Cartas[i].matched) {
-          ctx.drawImage(cartaImages[i], x, y, 100, 100);
-        } else {
+          const img = new Image();
+          img.src = cartasdeljuego[i];
+          img.onload = function(){
+          ctx.drawImage(img, x, y, 100, 100);
+
+          };
+
+          img.cartasimg = function() {
+            console.img(`Error al cargar la imagen ${cartasdeljuego[i]}`);
+          };
+          } else {
           ctx.fillStyle = "#000000";
           ctx.fillRect(x + 5, y + 5, 90, 90);
         }
@@ -115,11 +122,11 @@
       const index = Math.floor(x / 120) + Math.floor(y / 120) * 5;
 
       if (!Cartas[index].voltear && voltearCarta.length < 2) {
-        Cartas[index].flipped = true;
+        Cartas[index].voltear = true;
         voltearCarta.push({index: index});
         Sonido.play(); 
         drawcartas();
-        // checkForMatch();
+         checkForMatch();
       }
     });
 
