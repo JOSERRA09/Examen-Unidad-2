@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -16,9 +16,10 @@
       display: block;
       margin: 0 auto;
     }
-    #timer {
+    #timer, #pairsCounter {
       font-size: 30px;
       margin-bottom: 20px;
+      display: none; 
     }
     #startButton {
       margin-top: 20px;
@@ -33,7 +34,13 @@
   </style>
 </head>
 <body>
+
+  <h2>
+    MEMORAMA FUTBOL PLAYERS
+  </h2>
   <div id="timer">Tiempo: 0s</div>
+  <div id="pairsCounter">Pares Acertados: 0</div>
+
 
   <canvas id="mycanvas" width="600" height="700"></canvas>
 
@@ -54,6 +61,7 @@
     const timerDiv = document.getElementById("timer");
     const startButton = document.getElementById("startButton");
     const Sonido = document.getElementById("Sonido");
+    const pairsCounterDiv = document.getElementById("pairsCounter");
 
     var Cartas = [];
     var voltearCarta = [];
@@ -63,14 +71,27 @@
     var InicioTiempo;
     var IniciarJuego = false;
     var moves = 0;
+    var acertados = 0;
+
+    /////CARGA LAS IMAGENES
+    const cartaImage = new Image();
+    cartaImage.src = 'Neymar.png';
+    cartaImage.onload = () => {
+      console.log('Imagen cargada correctamente');
+    };
+    cartaImage.onerror = () => {
+      console.error('Error al cargar la imagen');
+    };
+
+    //// ESTO DUPLICA LAS CARTAS AL FORMAR PARES
+
+    let cartasdeljuego = Array(totalPares).fill(cartaImage.src);
+    cartasdeljuego = [...cartasdeljuego, ...cartasdeljuego];
 
 
-    const cartaImages = [];
-    for (let i = 0; i < totalPares; i++) {
-      cartaImages.push(`Neymar.png`);
-    }
-    let cartasdeljuego = [...cartaImages, ...cartaImages];
 
+
+    ////ESTO ES PARA BARAJAR LAS CARTAS
     function Barajear(array) {
       for (let i = array.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -78,6 +99,7 @@
       }
     }
 
+    ////ICARTAS 
     function Icartas() {
       Cartas = [];
       for (let i = 0; i < cartasdeljuego.length; i++) {
@@ -86,9 +108,13 @@
       drawcartas();
     }
 
+
+    ///// DIBUJA LAS CARTAS DENTRO DEL CANVAS
     function drawcartas() {
       ctx.clearRect(0, 0, mycanvas.width, mycanvas.height);
     
+
+      ////DIBUJA EL CAMPO DE FUTBOL
       drawCampo();
 
       for (let i = 0; i < cartasdeljuego.length; i++) {
@@ -97,39 +123,59 @@
         ctx.fillStyle = "#ffffff";
         ctx.fillRect(x, y, 100, 100);
 
+        ///// MUESTRA LA IMAGEN CUANDO LA CARTA ESTA VOLTEADA
         if (Cartas[i].voltear || Cartas[i].matched) {
           const img = new Image();
           img.src = cartasdeljuego[i];
           img.onload = function(){
-          ctx.drawImage(img, x, y, 100, 100);
-
+            ctx.drawImage(img, x, y, 100, 100);
           };
-
-          img.cartasimg = function() {
-            console.img(`Error al cargar la imagen ${cartasdeljuego[i]}`);
+          img.onerror = function() {
+            console.error(`Error al cargar la imagen ${cartasdeljuego[i]}`);
           };
-          } else {
+        } else {
           ctx.fillStyle = "#000000";
           ctx.fillRect(x + 5, y + 5, 90, 90);
         }
       }
     }
+    ////// ESTO ES PARA VERIFICAR SI HAY UN PAR
+    function checkForMatch() {
+      if (voltearCarta.length < 2) return;
 
-  mycanvas.addEventListener("click", (e) => {
+      const [first, second] = voltearCarta;
+      if (cartasdeljuego[first.index] === cartasdeljuego[second.index]) {
+        Cartas[first.index].matched = true;
+        Cartas[second.index].matched = true;
+        acertados++;
+        pairsCounterDiv.textContent = `Pares Acertados: ${acertados}`;
+      } else {
+        Cartas[first.index].voltear = false;
+        Cartas[second.index].voltear = false;
+      }
+      
+      voltearCarta = [];
+      drawcartas();
+    }
+
+    ///// AL HACER CLIC EN LA CARTA
+    mycanvas.addEventListener("click", (e) => {
       if (!IniciarJuego) return; 
       const x = e.offsetX;
       const y = e.offsetY;
       const index = Math.floor(x / 120) + Math.floor(y / 120) * 5;
 
+      
       if (!Cartas[index].voltear && voltearCarta.length < 2) {
-        Cartas[index].voltear = true;
+        Cartas[index].voltear = true; 
         voltearCarta.push({index: index});
-        Sonido.play(); 
+        Sonido.play(); //// ESTO HACE QUE EL SONIDO AL VOLTEAR LA CARTA
         drawcartas();
-         checkForMatch();
+        checkForMatch(); 
       }
     });
 
+    ////////DISEÑO DEL CAMPO DE FUTBOL
 
     function drawCampo() {
       ctx.beginPath();
@@ -188,6 +234,7 @@
       ctx.lineWidth = 5;
       ctx.strokeRect(370, 330, 230, 10);
 
+      ////CIRCULO DEL CAMPO
       ctx.beginPath();
       ctx.arc(300, 330, 70, 0, 2 * Math.PI);
       ctx.strokeStyle = "#ffffff";
@@ -195,6 +242,7 @@
       ctx.stroke();
     }
 
+    /////TIEMPO DEL JUEGO
     function Tiempo() {
       const currentTime = Date.now();
       const elapsedTime = Math.floor((currentTime - InicioTiempo) / 1000);
@@ -202,9 +250,13 @@
       requestAnimationFrame(Tiempo);
     }
 
+    /////////////INICIO DE LA MUSICA DE FONDO AL HACER CLIC AL BOTON,
+
     startButton.addEventListener("click", () => {
       MusicaDeFondo.play();
       startButton.style.display = "none";
+      timerDiv.style.display = "block"; 
+      pairsCounterDiv.style.display = "block";
       IniciarJuego = true;
       Barajear(cartasdeljuego);
       Icartas();
@@ -212,6 +264,7 @@
       Tiempo();
     });
 
+  ///// LLAMA EL CAMPO DE FUTBOL AL CARGAR LA PAGINA PARA MOSTRAR EN EL JUEGO
     drawCampo();
   </script>
 </body>
