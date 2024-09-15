@@ -1,156 +1,197 @@
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>MemoramaDeFutbol</title>
   <style>
-
-
-
-body {
+    body {
       background-color: rgb(0, 0, 0);
+      color: white;
+      text-align: center;
     }
-
-    
     canvas {
       background-color: rgb(7, 216, 0);
-      border:5px solid rgb(255, 252, 252);
+      border: 5px solid rgb(255, 252, 252);
       display: block;
       margin: 0 auto;
-
-
-
     }
-    
-
-
+    #timer {
+      font-size: 30px;
+      margin-bottom: 20px;
+    }
   </style>
 </head>
 <body>
-
+  <div id="timer">Tiempo: 0s</div>
   <canvas id="mycanvas" width="600" height="700"></canvas>
   <audio id="MusicaDeFondo" loop>
-<source src="HimnoDeLaWCL.mp3" type="Audio/mp3">
-  
-</audio>
+    <source src="HimnoDeLaWCL.mp3" type="audio/mp3">
+  </audio>
+  <button id="startButton">Iniciar Juego</button>
 
-  
-<script>
-
-/// NOMBRE:FLORES SANCHEZ JOSE RAMON
-/// PROGRAMACION AVANAZADA EN INTERNET
-/// CARRERA : INGENERIA EN DESARROLLO DE SOFTWARE
-//// TURNO : VESPERTNO
-//// EXAMEN U2 : MEMORAMA
-
-
- const mycanvas = document.getElementById("mycanvas");
+  <script>
+    const mycanvas = document.getElementById("mycanvas");
     const ctx = mycanvas.getContext("2d");
-
-
-    /////DISEÑO DEL MEMORAMA CAMPO DE FUTBOL
-        
-        ctx.beginPath();
-        ctx.fillStyle = "white";
-        ctx.fillRect(0, 330, 230, 10);
-
-        ctx.strokeStyle = "#00000";
-        ctx.lineWidth = 5;
-        ctx.strokeRect(0, 330,230, 10);
-
-
-        ctx.beginPath();
-        ctx.fillStyle = "white";
-        ctx.fillRect(180, 70, 230, 10);
-
-        ctx.strokeStyle = "#00000";
-        ctx.lineWidth = 5;
-        ctx.strokeRect(180, 70,230, 10);
-
-
-        
-        ctx.beginPath();
-        ctx.fillStyle = "white";
-        ctx.fillRect(170, 0, 15, 80);
-
-        ctx.strokeStyle = "#00000";
-        ctx.lineWidth = 5;
-        ctx.strokeRect(170, 0,15,80);
-
-
-        ctx.beginPath();
-        ctx.fillStyle = "white";
-        ctx.fillRect(395, 0, 15, 80);
-
-        ctx.strokeStyle = "#00000";
-        ctx.lineWidth = 5;
-        ctx.strokeRect(395, 0,15,80);
+    const MusicaDeFondo = document.getElementById("MusicaDeFondo");
+    const timerDiv = document.getElementById("timer");
+    const startButton = document.getElementById("startButton");
 
 
 
-         ctx.beginPath();
-        ctx.fillStyle = "white";
-        ctx.fillRect(180, 610, 230, 10);
+    var Cartas = [];
+    var voltearCarta = [];
+    var Pares = 0;
+    var nivel = 1;
+    var totalPares = 15;
+    var movimiento = 0;
+    var InicioTiempo;
+    var IniciarJuego = false;
 
-        ctx.strokeStyle = "#00000";
-        ctx.lineWidth = 5;
-        ctx.strokeRect(180, 610,230, 10);
+
+    ////CARGAR LAS IMAGENES DE LAS CARTAS
+    const cartasimg = [];
+    for (let i = 0; i < totalPares; i++) {
+      cartasimg.push("Neymar.png");
+    }
+    ///DUPLICAR LAS CARTAS SI ES PAR
+    let cartasdeljuego = [...cartasimg, ...cartasimg];
 
 
-        ctx.beginPath();
-        ctx.fillStyle = "white";
-        ctx.fillRect(170, 610, 15, 90);
+    ////BARAJEAR LAS CARTAS
+    function Barajear(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+    }
+    ///ICARTAS
+    function Icartas() {
+      Cartas = [];
+      for (let i = 0; i < cartasdeljuego.length; i++) {
+        Cartas.push({ voltear: false, matched: false });
+      }
+      drawcartas(); 
+    }
+    ///DIBUJA LAS CARTAS DENTRO DEL CAMPO DE FUTBOL
 
-        ctx.strokeStyle = "#00000";
-        ctx.lineWidth = 5;
-        ctx.strokeRect(170, 610,15,90);
+    function drawcartas() {
+
+      ctx.clearRect(0, 0, mycanvas.width, mycanvas.height);
+
+        ///DIBUJA EL DISEÑO DE CAMPO DE FUTBOL ,MAS LAS CARTAS
+        drawCampo();
+
+
+      for (let i = 0; i < cartasdeljuego.length; i++) {
+        const x = (i % 5) * 120;
+        const y = Math.floor(i / 5) * 120;
+        ctx.fillStyle = "#000000";
+        ctx.fillRect(x, y, 100, 100);
 
         
-        ctx.beginPath();
-        ctx.fillStyle = "white";
-        ctx.fillRect(400, 610, 15, 90);
+        
+        if (Cartas[i].voltear || Cartas[i].matched) {
+          const img = new Image();
+          img.src = cartasdeljuego[i];
+          img.onload = function() {
+            ctx.drawImage(img, x, y, 100, 100);
+          };
+        } else {
+          ctx.fillStyle = "#333";
+          ctx.fillRect(x + 5, y + 5, 90, 90);
+        }
+      }
+    }
 
-        ctx.strokeStyle = "#00000";
-        ctx.lineWidth = 5;
-        ctx.strokeRect(400, 610,15,90);
+    /////DISEÑO DEL CAMPO DE FUTBOL
+    function drawCampo() {
+      ctx.beginPath();
+      ctx.fillStyle = "white";
+      ctx.fillRect(0, 330, 230, 10);
+      ctx.strokeStyle = "#000000";
+      ctx.lineWidth = 5;
+      ctx.strokeRect(0, 330, 230, 10);
 
+      ctx.beginPath();
+      ctx.fillStyle = "white";
+      ctx.fillRect(180, 70, 230, 10);
+      ctx.strokeStyle = "#000000";
+      ctx.lineWidth = 5;
+      ctx.strokeRect(180, 70, 230, 10);
 
-        ctx.beginPath();
-        ctx.fillStyle = "white";
-        ctx.fillRect(370, 330, 230, 10);
+      ctx.beginPath();
+      ctx.fillStyle = "white";
+      ctx.fillRect(170, 0, 15, 80);
+      ctx.strokeStyle = "#000000";
+      ctx.lineWidth = 5;
+      ctx.strokeRect(170, 0, 15, 80);
 
-        ctx.strokeStyle = "#00000";
-        ctx.lineWidth = 5;
-        ctx.strokeRect(370, 330,230, 10);
+      ctx.beginPath();
+      ctx.fillStyle = "white";
+      ctx.fillRect(395, 0, 15, 80);
+      ctx.strokeStyle = "#000000";
+      ctx.lineWidth = 5;
+      ctx.strokeRect(395, 0, 15, 80);
 
-        ////Circulo del Campo
+      ctx.beginPath();
+      ctx.fillStyle = "white";
+      ctx.fillRect(180, 610, 230, 10);
+      ctx.strokeStyle = "#000000";
+      ctx.lineWidth = 5;
+      ctx.strokeRect(180, 610, 230, 10);
 
-        ctx.beginPath();
-        ctx.arc(300, 330, 70, 0, 2 * Math.PI);
-        ctx.strokeStyle = "#ffffff";
-        ctx.lineWidth = 5;
-        ctx.stroke();
+      ctx.beginPath();
+      ctx.fillStyle = "white";
+      ctx.fillRect(170, 610, 15, 90);
+      ctx.strokeStyle = "#000000";
+      ctx.lineWidth = 5;
+      ctx.strokeRect(170, 610, 15, 90);
 
-        ////MUSICA DE FONDO AL HACER CLICK EN LA PANTALLA
+      ctx.beginPath();
+      ctx.fillStyle = "white";
+      ctx.fillRect(400, 610, 15, 90);
+      ctx.strokeStyle = "#000000";
+      ctx.lineWidth = 5;
+      ctx.strokeRect(400, 610, 15, 90);
 
-        document.body.addEventListener('click', () => {
+      ctx.beginPath();
+      ctx.fillStyle = "white";
+      ctx.fillRect(370, 330, 230, 10);
+      ctx.strokeStyle = "#000000";
+      ctx.lineWidth = 5;
+      ctx.strokeRect(370, 330, 230, 10);
 
-      const MusicaDeFondo = document.getElementById('MusicaDeFondo');
+      // Circulo del Campo
+      ctx.beginPath();
+      ctx.arc(300, 330, 70, 0, 2 * Math.PI);
+      ctx.strokeStyle = "#ffffff";
+      ctx.lineWidth = 5;
+      ctx.stroke();
+    }
 
-      MusicaDeFondo.play().catch(error => {
+    ////EL TIEMPO DEL JUEGO
+    function Tiempo() {
+      const currentTime = Date.now();
+      const elapsedTime = Math.floor((currentTime - InicioTiempo) / 1000);
+      timerDiv.textContent = `Tiempo: ${elapsedTime}s`;
+      requestAnimationFrame(Tiempo);
+    }
 
-        console.error('Error al reproducir el audio:', error);
+    
+    ///BOTON DE INICIAR JUEGO ,REPRODUCE LA MUSICA DE FONDO ,EL TIEMPO DEL JUEGO ,APARECEN LAS CARTAS
 
-      });
-
+    startButton.addEventListener("click", () => {
+      MusicaDeFondo.play();
+      startButton.style.display = "none"; 
+      IniciarJuego = true;
+      Barajear(cartasdeljuego);
+      Icartas();
+      InicioTiempo = Date.now();
+      Tiempo();
     });
 
-  
-
-
-
-
-</script>
+     drawCampo();
+  </script>
 </body>
 </html>
