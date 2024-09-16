@@ -69,10 +69,75 @@
   </audio>
 
 
+  <audio id="SIUU">
+    <source src="SIUUU.mp3" type="audio/mp3">
+  </audio>
+
+
+  <audio id="H9">
+    <source src="HAALAND.mp3" type="audio/mp3">
+  </audio>
+
+  <audio id="RP">
+    <source src="R11.mp3" type="audio/mp3">
+  </audio>
+
+  
+  <audio id="LY">
+    <source src="LY19.mp3" type="audio/mp3">
+  </audio>
+
+
+
+<audio id="R10">
+    <source src="RG10.mp3" type="audio/mp3">
+  </audio>
+
+
+<audio id="B9">
+    <source src="BA9.mp3" type="audio/mp3">
+  </audio>
+
+
+  <audio id="JB5">
+    <source src="BH5.mp3" type="audio/mp3">
+  </audio>
+
+
+  <audio id="KM10">
+    <source src="KM10.mp3" type="audio/mp3">
+  </audio>
+
+
+
+  <audio id="PD">
+    <source src="PD20.mp3" type="audio/mp3">
+  </audio>
+
+  
+  <audio id="D10">
+    <source src="DM10.mp3" type="audio/mp3">
+  </audio>
+
+
+  <audio id="M10">
+    <source src="JM10.mp3" type="audio/mp3">
+  </audio>
+
+
+  <audio id="G17"></audio>
+    <source src="AG17.mp3" type="audio/mp3">
+  </audio>
+
+
+  <audio id="JL9"></audio>
+  <source src="JA9.MP3" type="audio/mp3">
+</audio>
 
   <button id="startButton">Iniciar Juego</button>
 
   <script>
+
     const mycanvas = document.getElementById("mycanvas");
     const ctx = mycanvas.getContext("2d");
     const MusicaDeFondo = document.getElementById("MusicaDeFondo");
@@ -81,20 +146,33 @@
     const Sonido = document.getElementById("Sonido");
     const pairsCounterDiv = document.getElementById("pairsCounter");
     const title = document.getElementById("title");
- 
     const nopar = document.getElementById("nopar");
     
   
     const sonidosPares = [
-      document.getElementById("CHE-CHE"),
-      document.getElementById("EncaraMessi")
+      document.getElementById("CHE-CHE"),/////NEYMAR.JR
+      document.getElementById("EncaraMessi"),////MESSI
+      document.getElementById("SIUU"),//CRISTIANO RONALDO
+      document.getElementById("H9"),////ERLING HAAALAND
+      document.getElementById("RP"),////RAPHINA
+      document.getElementById("LY"),///LAMINE YAMAL
+      document.getElementById("R10"),///RONALDINHO
+      document.getElementById("B9"),////BENZEMA
+      document.getElementById("JB5"),//// JUDE BELINHAM
+      document.getElementById("KM10"),///KYLIAN MBAPPE
+      document.getElementById("PD"),/////PEDRI
+      document.getElementById("D10"),////DIEGO MARADONA
+      document.getElementById("M10"),////JAMAL MUSIALA
+      document.getElementById("G17"),////ALEJANDRO GARNACHO
+      document.getElementById("JL9"),////JULIAN ALVAREZ
+
    
     ];
 
     var Cartas = [];
     var voltearCarta = [];
     var Pares = 0;
-    var nivel = 1;
+    var nivel = 3;
     var totalPares = 15;
     var InicioTiempo;
     var IniciarJuego = false;
@@ -102,7 +180,21 @@
     var acertados = 0;
 
     ///// CARGA LAS IMAGENES
-    const cartaImage = ["Neymar.png", "Messi.png"];
+    const cartaImage = ["Neymar.png", 
+                        "Messi.png",
+                        "CR7.png",
+                        "H9.png",
+                        "RP.png",
+                        "LY.png",
+                        "R10.png",
+                        "B.9.png",
+                        "BH5.png",
+                         "KM.png",
+                        "PD.png",
+                        "D10.png",
+                        "M10.png",
+                        "G17.png",
+                        "JL.png", ];
     let cartasdeljuego = [];
 
     for (let i = 0; i < totalPares; i++) {
