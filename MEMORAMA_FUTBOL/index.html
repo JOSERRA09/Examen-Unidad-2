@@ -56,13 +56,19 @@
     <source src="Balon.mp3" type="audio/mp3">
   </audio>
 
-  <audio id="CHECHE">
-    <source src="CHE-CHE.MP3" type="audio/mp3">
-  </audio>
-
   <audio id="nopar">
     <source src="que-miras-bobo-messi.mp3" type="audio/mp3">
   </audio>
+
+  <audio id="CHE-CHE">
+    <source src="CHE-CHE.MP3" type="audio/mp3">
+  </audio>
+
+  <audio id="EncaraMessi">
+    <source src="EncaraMessi.mp3" type="audio/mp3">
+  </audio>
+
+
 
   <button id="startButton">Iniciar Juego</button>
 
@@ -75,8 +81,15 @@
     const Sonido = document.getElementById("Sonido");
     const pairsCounterDiv = document.getElementById("pairsCounter");
     const title = document.getElementById("title");
-    const CHECHE = document.getElementById("CHECHE");
+ 
     const nopar = document.getElementById("nopar");
+    
+  
+    const sonidosPares = [
+      document.getElementById("CHE-CHE"),
+      document.getElementById("EncaraMessi")
+   
+    ];
 
     var Cartas = [];
     var voltearCarta = [];
@@ -152,7 +165,9 @@
           Cartas[firstCard.index].matched = true;
           Cartas[secondCard.index].matched = true;
           acertados++;
-          CHECHE.play();
+          
+          const sonidoIndex = acertados <= sonidosPares.length ? acertados - 1 : 0;
+          sonidosPares[sonidoIndex].play();
           pairsCounterDiv.textContent = `Pares Acertados: ${acertados}`;
         } else {
           setTimeout(() => {
